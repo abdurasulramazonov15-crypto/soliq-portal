@@ -4,7 +4,7 @@ import datetime
 import re
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=".")
 DB_PATH = os.path.join(os.path.dirname(__file__), "soliq_portal.db")
 SECRET_API_TOKEN = os.environ.get("SITE_API_TOKEN", "soliq_portal_secret_token_2026")
 
