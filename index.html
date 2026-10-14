@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soliq Yangiliklari Portali — Rasmiy soliq axborotlari</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        soliq: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            dark: '#0f291e',
+                            navy: '#0b2447',
+                            blue: '#19376d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .soliq-gradient {
+            background: linear-gradient(135deg, #0b2447 0%, #19376d 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+
+    <!-- 1. YUQORI DAVLAT STANDARTI (TOP BAR) -->
+    <div class="bg-slate-900 text-slate-300 text-xs py-2 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <span class="inline-flex items-center text-emerald-400 font-medium">
+                    <i class="fa-solid fa-shield-halved mr-1.5"></i> O‘zbekiston Respublikasi
+                </span>
+                <span class="text-slate-500">|</span>
+                <span class="hidden md:inline">Soliq qonunchiligi va amaliyoti axborot portali</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-slate-400"><i class="fa-regular fa-clock mr-1 text-slate-500"></i> Toshkent: <strong class="text-white">{{ now_uz }}</strong></span>
+                <span class="text-slate-600">|</span>
+                <a href="https://t.me/soliq_news_yangiliklari" target="_blank" class="text-sky-400 hover:text-sky-300 flex items-center font-medium transition">
+                    <i class="fa-brands fa-telegram mr-1.5 text-base"></i> Telegram Kanalimiz
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. ASOSIY HEADER VA NAVIGATSIYA (my.soliq.uz uslubida) -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                
+                <!-- Logo va Nomi -->
+                <a href="/" class="flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-xl bg-soliq-navy text-white flex items-center justify-center shadow-md shadow-blue-900/20 group-hover:scale-105 transition-transform">
+                        <!-- Emblem Icon / Gerb ramzi -->
+                        <i class="fa-solid fa-landmark text-2xl text-amber-400"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold uppercase tracking-wider text-emerald-700">Elektron xizmatlar portali</div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                            Soliq Yangiliklari Portali
+                        </h1>
+                    </div>
+                </a>
+
+                <!-- Qidiruv tizimi -->
+                <div class="flex-1 max-w-md">
+                    <form action="/" method="GET" class="relative">
+                        {% if current_category != 'all' %}
+                        <input type="hidden" name="category" value="{{ current_category }}">
+                        {% endif %}
+                        <input type="text" name="q" value="{{ search_query }}" placeholder="Soliq, QQS, imtiyoz, YTT qidirish..." 
+                               class="w-full pl-10 pr-24 py-2.5 bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-300 focus:border-blue-600 rounded-xl text-sm transition outline-none focus:ring-2 focus:ring-blue-100">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <button type="submit" class="absolute right-1.5 top-1.5 px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-medium transition shadow-sm">
+                            Qidirish
+                        </button>
+                    </form>
+                </div>
+
+                <!-- O'ng tomondagi tugmalar -->
+                <div class="flex items-center space-x-2">
+                    <a href="https://my.soliq.uz" target="_blank" class="hidden sm:inline-flex items-center px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-200">
+                        <i class="fa-solid fa-arrow-up-right-from-square mr-1.5 text-slate-500"></i> my.soliq.uz
+                    </a>
+                    <a href="https://t.me/soliq_news_yangiliklari" target="_blank" class="inline-flex items-center px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold transition shadow-sm">
+                        <i class="fa-brands fa-telegram mr-1.5 text-sm"></i> Obuna bo‘lish
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 3. TOIFALAR MENYUSI (4 TA ASOSIY BO'LIM) -->
+        <div class="bg-slate-100/90 border-t border-slate-200 px-4">
+            <div class="max-w-7xl mx-auto flex space-x-2 overflow-x-auto py-2 scrollbar-none">
+                
+                <!-- Barchasi (Portaldagi yangiliklar) -->
+                <a href="/?category=all" 
+                   class="inline-flex items-center px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition whitespace-nowrap {{ 'bg-blue-700 text-white shadow-sm' if current_category == 'all' else 'text-slate-700 hover:bg-white hover:text-blue-700' }}">
+                    <span class="mr-2">🌐</span> Barcha yangiliklar
+                    <span class="ml-2 px-1.5 py-0.5 text-xs rounded-full {{ 'bg-blue-800 text-white' if current_category == 'all' else 'bg-slate-200 text-slate-600' }}">
+                        {{ counts.all }}
+                    </span>
+                </a>
+
+                <!-- Yuridik shaxslar -->
+                <a href="/?category=yuridik" 
+                   class="inline-flex items-center px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition whitespace-nowrap {{ 'bg-indigo-700 text-white shadow-sm' if current_category == 'yuridik' else 'text-slate-700 hover:bg-white hover:text-indigo-700' }}">
+                    <span class="mr-2">🏢</span> Yuridik shaxslar uchun
+                    <span class="ml-2 px-1.5 py-0.5 text-xs rounded-full {{ 'bg-indigo-800 text-white' if current_category == 'yuridik' else 'bg-slate-200 text-slate-600' }}">
+                        {{ counts.yuridik }}
+                    </span>
+                </a>
+
+                <!-- Jismoniy shaxslar -->
+                <a href="/?category=jismoniy" 
+                   class="inline-flex items-center px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition whitespace-nowrap {{ 'bg-emerald-700 text-white shadow-sm' if current_category == 'jismoniy' else 'text-slate-700 hover:bg-white hover:text-emerald-700' }}">
+                    <span class="mr-2">👤</span> Jismoniy shaxslar uchun
+                    <span class="ml-2 px-1.5 py-0.5 text-xs rounded-full {{ 'bg-emerald-800 text-white' if current_category == 'jismoniy' else 'bg-slate-200 text-slate-600' }}">
+                        {{ counts.jismoniy }}
+                    </span>
+                </a>
+
+                <!-- YaTT va o'zini o'zi band qilganlar -->
+                <a href="/?category=yatt" 
+                   class="inline-flex items-center px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition whitespace-nowrap {{ 'bg-amber-600 text-white shadow-sm' if current_category == 'yatt' else 'text-slate-700 hover:bg-white hover:text-amber-700' }}">
+                    <span class="mr-2">💼</span> YaTT va o‘z-o‘zini band qilganlar
+                    <span class="ml-2 px-1.5 py-0.5 text-xs rounded-full {{ 'bg-amber-700 text-white' if current_category == 'yatt' else 'bg-slate-200 text-slate-600' }}">
+                        {{ counts.yatt }}
+                    </span>
+                </a>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- ASOSIY KONTENT -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Muhim Soliq Eslatmasi (Banner) -->
+        <div class="mb-6 rounded-2xl soliq-gradient text-white p-5 sm:p-6 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-amber-300 text-2xl">
+                    <i class="fa-regular fa-calendar-check"></i>
+                </div>
+                <div>
+                    <div class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-400 text-slate-900 mb-1">
+                        Soliq Taqvimi
+                    </div>
+                    <h2 class="text-lg sm:text-xl font-bold">2026-yil Soliq majburiyatlari va hisobot muddatlari</h2>
+                    <p class="text-blue-100 text-xs sm:text-sm mt-1 max-w-2xl">
+                        AI botimiz orqali har bir rasmiy manbadan olingan xabar avtomatik tahlil qilinadi va kerakli toifaga joylashtiriladi.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <a href="https://abdurasulramazonov15-crypto.github.io/soliq-kalendari/" target="_blank" 
+                   class="w-full md:w-auto text-center px-4 py-2.5 rounded-xl bg-white text-blue-900 hover:bg-blue-50 text-xs font-bold transition shadow-sm">
+                    Taqvimni ochish <i class="fa-solid fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filtr va Qidiruv natijalari holati -->
+        {% if search_query %}
+        <div class="mb-6 flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-sm text-blue-900">
+            <div>
+                <i class="fa-solid fa-filter mr-1.5 text-blue-600"></i>
+                Qidiruv natijalari: <strong>"{{ search_query }}"</strong> ({{ news_items|length }} ta xabar topildi)
+            </div>
+            <a href="/" class="text-xs font-bold text-blue-700 hover:underline">Filtrni tozalash</a>
+        </div>
+        {% endif %}
+
+        <!-- YANGILIKLAR RO'YXATI (GRID) -->
+        {% if news_items %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for item in news_items %}
+            <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col transition-all duration-300 card-hover shadow-sm">
+                
+                <!-- Rasm bloki -->
+                <div class="relative h-48 bg-slate-100 overflow-hidden group">
+                    {% if item.image_url %}
+                    <img src="{{ item.image_url }}" alt="{{ item.title }}" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80';">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
+                        <i class="fa-solid fa-newspaper text-4xl"></i>
+                    </div>
+                    {% endif %}
+
+                    <!-- Toifa nishoni (Badge) -->
+                    {% set cat_key = item.category %}
+                    {% set cat_data = categories.get(cat_key, categories['portal']) %}
+                    <div class="absolute top-3 left-3">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border shadow-sm {{ cat_data.badge_class }} backdrop-blur-sm bg-opacity-95">
+                            <span class="mr-1.5">{{ cat_data.icon }}</span> {{ item.category_name }}
+                        </span>
+                    </div>
+
+                    <!-- Ko'rishlar soni -->
+                    <div class="absolute bottom-3 right-3 bg-slate-900/70 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-md text-xs flex items-center">
+                        <i class="fa-regular fa-eye mr-1"></i> {{ item.views }}
+                    </div>
+                </div>
+
+                <!-- Kontent bloki -->
+                <div class="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                        <!-- Sana va Manba -->
+                        <div class="flex items-center justify-between text-xs text-slate-500 mb-2.5">
+                            <span class="flex items-center">
+                                <i class="fa-regular fa-calendar mr-1.5 text-slate-400"></i>
+                                {{ item.created_at[:16] }}
+                            </span>
+                            <span class="font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                                {{ item.source }}
+                            </span>
+                        </div>
+
+                        <!-- Sarlavha -->
+                        <h3 class="text-base font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-blue-700 mb-2">
+                            <a href="/news/{{ item.id }}" class="hover:text-blue-700 transition">
+                                {{ item.title }}
+                            </a>
+                        </h3>
+
+                        <!-- Qisqacha mazmun -->
+                        <p class="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed mb-4">
+                            {{ item.summary or item.content[:150] }}...
+                        </p>
+                    </div>
+
+                    <!-- Pastki harakat tugmasi -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <a href="/news/{{ item.id }}" class="inline-flex items-center text-xs font-bold text-blue-700 hover:text-blue-900 transition">
+                            Batafsil o‘qish <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+                        </a>
+                        <span class="text-xs text-slate-400">
+                            #{{ item.id }}
+                        </span>
+                    </div>
+                </div>
+
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Bo'sh holat (Empty State) -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-lg mx-auto">
+            <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-800">Ushbu bo‘limda hozircha yangiliklar yo‘q</h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1 mb-6">
+                Telegram bot manba kanallardan yangi xabar qabul qilganda, ushbu joyda avtomatik paydo bo‘ladi.
+            </p>
+            <a href="/" class="inline-flex items-center px-4 py-2 rounded-xl bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 transition">
+                Barcha yangiliklarga qaytish
+            </a>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <!-- 4. FOOTER (Quyi qism) -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                
+                <div>
+                    <div class="flex items-center space-x-2 text-white font-bold text-sm mb-3">
+                        <i class="fa-solid fa-landmark text-amber-400 text-base"></i>
+                        <span>Soliq Yangiliklari Portali</span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed text-xs">
+                        O‘zbekiston Respublikasidagi barcha soliq o‘zgarishlari, buxgalteriya qoidalari va qonunchilik yangiliklarini yagona manzilga jamlovchi intellektual axborot platformasi.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Asosiy havolalar</h4>
+                    <ul class="space-y-2">
+                        <li><a href="https://soliq.uz" target="_blank" class="hover:text-white transition">Davlat soliq qo‘mitasi (soliq.uz)</a></li>
+                        <li><a href="https://my.soliq.uz" target="_blank" class="hover:text-white transition">Elektron xizmatlar portali (my.soliq.uz)</a></li>
+                        <li><a href="https://lex.uz" target="_blank" class="hover:text-white transition">Qonunchilik ma'lumotlari milliy bazasi (lex.uz)</a></li>
+                        <li><a href="https://abdurasulramazonov15-crypto.github.io/soliq-kalendari/" target="_blank" class="hover:text-white transition">Interaktiv Soliq Taqvimi</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Telegram integratsiyasi</h4>
+                    <p class="text-slate-400 mb-3 text-xs">
+                        Barcha xabarlar avtomatik ravishda rasmiy Telegram kanalimizga ham yuborib boriladi.
+                    </p>
+                    <a href="https://t.me/soliq_news_yangiliklari" target="_blank" class="inline-flex items-center px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold transition">
+                        <i class="fa-brands fa-telegram mr-2"></i> @soliq_news_yangiliklari
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="pt-6 border-t border-slate-800 text-center text-slate-500">
+                &copy; 2026 Soliq Yangiliklari Portali — news.ramazonov.uz. Barcha huquqlar himoyalangan.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

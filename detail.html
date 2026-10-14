@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ item.title }} — Soliq Yangiliklari Portali</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-content p {
+            margin-bottom: 1.25rem;
+            line-height: 1.8;
+            color: #334155;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-3 text-slate-700 hover:text-blue-700 font-semibold text-sm transition">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Bosh sahifaga qaytish</span>
+            </a>
+
+            <div class="flex items-center space-x-3">
+                <a href="https://t.me/soliq_news_yangiliklari" target="_blank" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sky-50 text-sky-700 hover:bg-sky-100 text-xs font-semibold border border-sky-200 transition">
+                    <i class="fa-brands fa-telegram mr-1.5 text-sm"></i> Telegram Kanal
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN ARTICLE -->
+    <main class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-8">
+        
+        <article class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm p-6 sm:p-10">
+            
+            <!-- Metadata: Toifa va Sana -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
+                <div class="flex items-center space-x-2">
+                    {% set cat_data = categories.get(item.category, categories['portal']) %}
+                    <a href="/?category={{ item.category }}" class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold border {{ cat_data.badge_class }}">
+                        <span class="mr-1.5">{{ cat_data.icon }}</span> {{ item.category_name }}
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4 text-xs text-slate-500">
+                    <span><i class="fa-regular fa-calendar mr-1"></i> {{ item.created_at[:16] }}</span>
+                    <span><i class="fa-regular fa-eye mr-1"></i> {{ item.views }} ko‘rildi</span>
+                    <span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded font-medium">{{ item.source }}</span>
+                </div>
+            </div>
+
+            <!-- Sarlavha -->
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight mb-6">
+                {{ item.title }}
+            </h1>
+
+            <!-- Rasm -->
+            {% if item.image_url %}
+            <div class="mb-8 rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200">
+                <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full max-h-[480px] object-cover"
+                     onerror="this.style.display='none';">
+            </div>
+            {% endif %}
+
+            <!-- Matn -->
+            <div class="article-content prose prose-slate max-w-none text-slate-700 whitespace-pre-line text-base sm:text-lg leading-relaxed">
+                {{ item.content }}
+            </div>
+
+            <!-- Ulashish (Share) bloki -->
+            <div class="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Ushbu yangilikni ulashing:
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="https://t.me/share/url?url={{ request.url }}&text={{ item.title }}" target="_blank"
+                       class="inline-flex items-center px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold transition shadow-sm">
+                        <i class="fa-brands fa-telegram mr-1.5 text-sm"></i> Telegramda ulashish
+                    </a>
+                    <button onclick="navigator.clipboard.writeText(window.location.href); alert('Havola nusxalandi!');"
+                            class="inline-flex items-center px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-200">
+                        <i class="fa-regular fa-copy mr-1.5"></i> Havolani nusxalash
+                    </button>
+                </div>
+            </div>
+
+        </article>
+
+        <!-- O'xshash yangiliklar (Related) -->
+        {% if related_items %}
+        <div class="mt-12">
+            <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center">
+                <i class="fa-solid fa-layer-group text-blue-600 mr-2"></i> Mavzuga oid boshqa xabarlar
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {% for r in related_items %}
+                <a href="/news/{{ r.id }}" class="bg-white rounded-2xl border border-slate-200 p-4 hover:border-blue-400 hover:shadow-md transition flex flex-col justify-between">
+                    <h4 class="text-sm font-bold text-slate-800 line-clamp-2 mb-2 hover:text-blue-600">
+                        {{ r.title }}
+                    </h4>
+                    <span class="text-xs text-slate-400">
+                        <i class="fa-regular fa-calendar mr-1"></i> {{ r.created_at[:10] }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-12 text-center">
+        <p>&copy; 2026 Soliq Yangiliklari Portali — news.ramazonov.uz</p>
+    </footer>
+
+</body>
+</html>
